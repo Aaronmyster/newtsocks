@@ -4,7 +4,7 @@ newtsocks
 It's an anagram for news and stocks.
 
 Requirements (not included in the virtualenv):
-sqlite: apt-get install sqlite
+sqlite: apt-get install sqlite3
 virtualenv: pip install virtualenv (not sure if you actually need this)
 
 Instructions:
