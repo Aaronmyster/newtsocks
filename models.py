@@ -2,30 +2,24 @@ from peewee import *
 
 db = SqliteDatabase('newtsocks.db')
 
-class Company(Model):
+class BaseModel(Model):
+	class Meta:
+		database = db
+
+class Company(BaseModel):
 	name = CharField()
 	ticker = CharField()
 
-	class Meta:
-		database = db
-
-
-class NewsSource(Model):
+class NewsSource(BaseModel):
 	name = CharField()	
 	url = CharField()
 
-	class Meta:
-		database = db
-
-class News(Model):
+class News(BaseModel):
 	company = ForeignKeyField(Company, related_name='news_fromCompany')
 	newsSource = ForeignKeyField(Company, related_name='news_fromSource')
 	html = CharField()
 
-	class Meta:
-		database = db
-
-class Price(Model):
+class Price(BaseModel):
 	company = ForeignKeyField(Company, related_name='prices')
 	date = DateTimeField()
 	openPrice = DoubleField()
@@ -33,9 +27,6 @@ class Price(Model):
 	lowPrice = DoubleField()
 	closePrice = DoubleField()
 	volumePrice = DoubleField()
-
-	class Meta:
-		database = db
 
 	
 	
