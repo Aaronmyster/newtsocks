@@ -18,6 +18,7 @@ class News(BaseModel):
 	company = ForeignKeyField(Company, related_name='news_fromCompany')
 	newsSource = ForeignKeyField(Company, related_name='news_fromSource')
 	html = CharField()
+	url = CharField()
 
 class Price(BaseModel):
 	company = ForeignKeyField(Company, related_name='prices')
