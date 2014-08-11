@@ -45,12 +45,9 @@ def addNewsArticle(companyModel,newsSourceModel,url):
 	for t in textElements:
 		text += t
 
-	#TODO: Need the date field
+	#Need the date field
 	dateText = tree.xpath("//div[@id='articleInfo']//span[@class='timestamp']/text()")[0]
-	print dateText
-	
-	date = datetime.datetime.strptime(dateText, "%a %b %d, %Y %I:%M%p %Z").date()
-	print dateText
+	date = datetime.datetime.strptime(dateText[:-4], "%a %b %d, %Y %I:%M%p").date()
 
 	News.create(company=companyModel,
 		newsSource=newsSourceModel,
