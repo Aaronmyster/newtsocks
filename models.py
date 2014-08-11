@@ -20,6 +20,7 @@ class News(BaseModel):
 	title = CharField()
 	text = CharField()
 	url = CharField()
+	date = DateTimeField()
 
 class Price(BaseModel):
 	company = ForeignKeyField(Company, related_name='prices')

@@ -2,8 +2,9 @@ from models import *
 from lxml import html
 import requests
 
-def addNewsArticle(companyModel,newsSourceModel,htmlString,url):
-	tree = html.fromstring(htmlString)
+def addNewsArticle(companyModel,newsSourceModel,url):
+	tree = html.fromstring(requests.get(url).text)
+	
 	#Need the article title
 	title = tree.xpath('//h1/text()')[0]
 
@@ -13,35 +14,40 @@ def addNewsArticle(companyModel,newsSourceModel,htmlString,url):
 	for t in textElements:
 		text += t
 
+	#TODO: Need the date field
+
 	News.create(company=companyModel,
 		newsSource=newsSourceModel,
 		title=title,
 		text=text,
-		url=url
+		url=url,
+		date = date
 	)
 	print "Added: "+title
 
 def readSearchPage(companyModel,newsSourceModel,url):
-	#page = requests.get('http://www.reuters.com/search?blob="'+c.name.replace(' ','+')+'"')
-	#tree = html.fromstring(page.text)
-	tree = html.fromstring(file("/home/aaron/Downloads/sr.html").read())
+	tree = html.fromstring(requests.get(url).text)
+
+	#Get the list of all article URL's
 	articleURLs = tree.xpath("//*[@class='searchHeadline']/a/@href")
 
 	#add every article on the search page to the database
-	#for url in articleURLs:
-		#htmlString = requests.get(url).text
-		#addNewsArticle(companyModel,newsSourceModel)
+	for articleUrl in articleURLs:
+		addNewsArticle(companyModel,newsSourceModel,articleUrl)
 
 	#go to the next page, and do the same thing...
-	nextUrl = tree.xpath("//*[@class='next']/a/@href")[0]
-	print nextUrl
+	nextURL = tree.xpath("//*[@class='next']/a/@href")[0]
+	readSearchPage(companyModel,newsSourceModel,nextURL)
 
 def main():
-	#Just testing a single company for now
-	company = Company.select().where(Company.id==2).get()
-	newsSource = NewsSource.select().where(NewsSource.name=='Reuters').get()
+	companies = Company.select()
+	ns = NewsSource.select().where(NewsSource.name=='Reuters').get()
 
-	readSearchPage(company,newsSource,"")
+	for c in companies:
+		firstURL = 'http://www.reuters.com/search?blob="'+c.name.replace(' ','+')+'"'
+		readSearchPage(c,ns,firstURL)
+
+	print 'DONE!'
 
 main()
 #print articleURLs
