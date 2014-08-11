@@ -1,3 +1,4 @@
+import sys
 from models import *
 
 """Creates the database, and populates initial data"""
