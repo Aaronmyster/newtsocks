@@ -1,6 +1,6 @@
 from peewee import *
 
-db = SqliteDatabase('newtsocks.db')
+db = SqliteDatabase('../newtsocks.db')
 
 class BaseModel(Model):
 	class Meta:
