@@ -1,29 +1,17 @@
 from models import *
 from lxml import html
 import requests
+import sys
 
-def addNewsArticle(companyModel,newsSourceModel,url):
-	tree = html.fromstring(requests.get(url).text)
-	
-	#Need the article title
-	title = tree.xpath('//h1/text()')[0]
+def main():
+	companies = Company.select()
+	ns = NewsSource.select().where(NewsSource.name=='Reuters').get()
 
-	#Need the text of the article
-	textElements = tree.xpath("//*[@id='articleText']//*/text()")
-	text = ""
-	for t in textElements:
-		text += t
+	for c in companies:
+		firstURL = 'http://www.reuters.com/search?blob="'+c.name.replace(' ','+')+'"'
+		readSearchPage(c,ns,firstURL)
 
-	#TODO: Need the date field
-
-	News.create(company=companyModel,
-		newsSource=newsSourceModel,
-		title=title,
-		text=text,
-		url=url,
-		date = date
-	)
-	print "Added: "+title
+	print 'DONE!'
 
 def readSearchPage(companyModel,newsSourceModel,url):
 	tree = html.fromstring(requests.get(url).text)
@@ -39,16 +27,29 @@ def readSearchPage(companyModel,newsSourceModel,url):
 	nextURL = tree.xpath("//*[@class='next']/a/@href")[0]
 	readSearchPage(companyModel,newsSourceModel,nextURL)
 
-def main():
-	companies = Company.select()
-	ns = NewsSource.select().where(NewsSource.name=='Reuters').get()
+def addNewsArticle(companyModel,newsSourceModel,url):
+	tree = html.fromstring(requests.get(url).text)
+	
+	#Need the article title
+	title = tree.xpath('//h1/text()')[0]
 
-	for c in companies:
-		firstURL = 'http://www.reuters.com/search?blob="'+c.name.replace(' ','+')+'"'
-		readSearchPage(c,ns,firstURL)
+	#Need the text of the article
+	textElements = tree.xpath("//*[@id='articleText']//*/text()")
+	text = ""
+	for t in textElements:
+		text += t
 
-	print 'DONE!'
+	#TODO: Need the date field
+	dateText = tree.xpath("//span[@class='timestamp']/text()")
 
-main()
-#print articleURLs
-#addNewsArticle(c,newsSource,file("/home/aaron/Downloads/article.html").read(),"bla")
+	News.create(company=companyModel,
+		newsSource=newsSourceModel,
+		title=title,
+		text=text,
+		url=url,
+		date = date
+	)
+	print "Added: "+title
+
+if __name__ == '__main__':
+    sys.exit(main())
