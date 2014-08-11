@@ -11,6 +11,7 @@ def main():
 	ns = NewsSource.select().where(NewsSource.name=='Reuters').get()
 
 	for c in companies:
+		print "Finding stories about "+c.name
 		firstURL = baseURL+'/search?blob="'+c.name.replace(' ','+')+'"'
 		readSearchPage(c,ns,firstURL,1)
 
