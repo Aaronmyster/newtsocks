@@ -8,12 +8,11 @@ This is a small project I'm doing to figure out if there's a correlation between
 Requirements
 ------------
 * sqlite: apt-get install sqlite3
-* virtualenv: pip install virtualenv (not sure if you actually need this)
 
 Instructions:
 -------------
 1. Clone the repo: git clone https://github.com/Aaronmyster/newtsocks.git
 2. cd into the directory: cd newtsocks
-3. Get into the virtual environment: source bin/activate
+3. install the rest of the requirements: pip install -r requirements.txt
 
 ... Still working on the rest
