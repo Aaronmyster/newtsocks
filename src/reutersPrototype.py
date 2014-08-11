@@ -1,6 +1,7 @@
 from models import *
 from lxml import html
 import requests
+import datetime
 import sys
 
 def main():
@@ -9,11 +10,16 @@ def main():
 
 	for c in companies:
 		firstURL = 'http://www.reuters.com/search?blob="'+c.name.replace(' ','+')+'"'
-		readSearchPage(c,ns,firstURL)
+		readSearchPage(c,ns,firstURL,1)
 
 	print 'DONE!'
 
-def readSearchPage(companyModel,newsSourceModel,url):
+def readSearchPage(companyModel,newsSourceModel,url,page):
+	if page == 5:
+		return
+	
+	print 'Reading Page: {0}'.format(page)
+
 	tree = html.fromstring(requests.get(url).text)
 
 	#Get the list of all article URL's
@@ -25,7 +31,7 @@ def readSearchPage(companyModel,newsSourceModel,url):
 
 	#go to the next page, and do the same thing...
 	nextURL = tree.xpath("//*[@class='next']/a/@href")[0]
-	readSearchPage(companyModel,newsSourceModel,nextURL)
+	readSearchPage(companyModel,newsSourceModel,nextURL,page+1)
 
 def addNewsArticle(companyModel,newsSourceModel,url):
 	tree = html.fromstring(requests.get(url).text)
@@ -40,7 +46,11 @@ def addNewsArticle(companyModel,newsSourceModel,url):
 		text += t
 
 	#TODO: Need the date field
-	dateText = tree.xpath("//span[@class='timestamp']/text()")
+	dateText = tree.xpath("//div[@id='articleInfo']//span[@class='timestamp']/text()")[0]
+	print dateText
+	
+	date = datetime.datetime.strptime(dateText, "%a %b %d, %Y %I:%M%p %Z").date()
+	print dateText
 
 	News.create(company=companyModel,
 		newsSource=newsSourceModel,
