@@ -4,17 +4,20 @@ import requests
 import datetime
 import sys
 
+baseURL = 'http://www.reuters.com'
+
 def main():
 	companies = Company.select()
 	ns = NewsSource.select().where(NewsSource.name=='Reuters').get()
 
 	for c in companies:
-		firstURL = 'http://www.reuters.com/search?blob="'+c.name.replace(' ','+')+'"'
+		firstURL = baseURL+'/search?blob="'+c.name.replace(' ','+')+'"'
 		readSearchPage(c,ns,firstURL,1)
 
 	print 'DONE!'
 
 def readSearchPage(companyModel,newsSourceModel,url,page):
+	#Only go 5 pages in for now. I'm working on my chromebook...
 	if page == 5:
 		return
 	
@@ -31,7 +34,7 @@ def readSearchPage(companyModel,newsSourceModel,url,page):
 
 	#go to the next page, and do the same thing...
 	nextURL = tree.xpath("//*[@class='next']/a/@href")[0]
-	readSearchPage(companyModel,newsSourceModel,nextURL,page+1)
+	readSearchPage(companyModel,newsSourceModel,baseURL+nextURL,page+1)
 
 def addNewsArticle(companyModel,newsSourceModel,url):
 	tree = html.fromstring(requests.get(url).text)
