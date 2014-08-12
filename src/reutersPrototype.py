@@ -20,24 +20,24 @@ def main():
     print 'DONE!'
 
 def readSearchPage(companyModel,newsSourceModel,url,page):
-    # Only go 5 pages in for now. I'm working on my chromebook...
-    if page == 5:
-        return
-    
-    print 'Reading Page: {0}'.format(page)
+    try:
+        print 'Reading Page: {0}'.format(page)
 
-    tree = html.fromstring(requests.get(url).text)
+        tree = html.fromstring(requests.get(url).text)
 
-    # Get the list of all article URL's
-    articleURLs = tree.xpath("//*[@class='searchHeadline']/a/@href")
+        # Get the list of all article URL's
+        articleURLs = tree.xpath("//*[@class='searchHeadline']/a/@href")
 
-    # add every article on the search page to the database
-    for articleUrl in articleURLs:
-        addNewsArticle(companyModel,newsSourceModel,articleUrl)
+        # add every article on the search page to the database
+        for articleUrl in articleURLs:
+            addNewsArticle(companyModel,newsSourceModel,articleUrl)
 
-    # go to the next page, and do the same thing...
-    nextURL = tree.xpath("//*[@class='next']/a/@href")[0]
-    readSearchPage(companyModel,newsSourceModel,baseURL+nextURL,page+1)
+        # go to the next page, and do the same thing...
+        nextURL = tree.xpath("//*[@class='next']/a/@href")[0]
+        readSearchPage(companyModel,newsSourceModel,baseURL+nextURL,page+1)
+
+    except Exception, e:
+        print "There was an error on page {0}. Moving on.".format(page)
 
 def addNewsArticle(companyModel,newsSourceModel,url):
     tree = html.fromstring(requests.get(url).text)
