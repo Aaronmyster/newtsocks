@@ -1,16 +1,18 @@
 import sys
 from models import *
 
-"""Creates the database, and populates initial data"""
+#
+#Creates the database, and populates initial data
+#
 
-"""Main entry point"""
+#Main entry point
 def main():
 	createDB()
 	addCompanies()
 	addNewsSources()
 	print "Done!"
 
-"""Creates the db file and schema"""
+#Creates the db file and schema
 def createDB():
 	print "Creating the initial db"
 	Company.create_table()
@@ -18,12 +20,12 @@ def createDB():
 	News.create_table()
 	Price.create_table()
 
-"""Adds News Sources"""
+#Adds News Sources
 def addNewsSources():
 	print "Adding News Sources"
 	NewsSource.create(name="Reuters", url="http://www.reuters.com")
 
-"""Adds Companies"""
+#Adds Companies
 def addCompanies():
 	print "Adding companies..."
 	Company.create(name="Sprint", ticker="S")
@@ -129,4 +131,4 @@ def addCompanies():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+	sys.exit(main())
