@@ -1,7 +1,9 @@
-from models import *
 from lxml import html
-import requests
+from models import Company
+from models import News
+from models import NewsSource
 import datetime
+import requests
 import sys
 
 baseURL = 'http://www.reuters.com'

@@ -1,9 +1,14 @@
-from peewee import *
+from peewee import CharField
+from peewee import DateTimeField
+from peewee import DoubleField
+from peewee import ForeignKeyField
+from peewee import Model
+from peewee import SqliteDatabase
 
 db = SqliteDatabase('../newtsocks.db')
 
 class BaseModel(Model):
-    class Meta:
+    class Meta(object):
         database = db
 
 class Company(BaseModel):

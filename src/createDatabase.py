@@ -1,5 +1,8 @@
 import sys
-from models import *
+from models import Company
+from models import NewsSource
+from models import News
+from models import Price
 
 # 
 # Creates the database, and populates initial data
