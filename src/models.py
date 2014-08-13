@@ -2,6 +2,7 @@ from peewee import CharField
 from peewee import DateTimeField
 from peewee import DoubleField
 from peewee import ForeignKeyField
+from peewee import IntegerField
 from peewee import Model
 from peewee import SqliteDatabase
 
@@ -20,15 +21,15 @@ class NewsSource(BaseModel):
     url = CharField()
 
 class News(BaseModel):
-    company = ForeignKeyField(Company, related_name='news_fromCompany')
-    newsSource = ForeignKeyField(Company, related_name='news_fromSource')
+    company = ForeignKeyField(Company, related_name='news.company')
+    newsSource = ForeignKeyField(NewsSource, related_name='news.newsSource')
     title = CharField()
     text = CharField()
     url = CharField()
     date = DateTimeField()
 
 class Price(BaseModel):
-    company = ForeignKeyField(Company, related_name='prices')
+    company = ForeignKeyField(Company, related_name='price.company')
     date = DateTimeField()
     openPrice = DoubleField()
     highPrice = DoubleField()
@@ -36,5 +37,5 @@ class Price(BaseModel):
     closePrice = DoubleField()
     volumePrice = DoubleField()
 
-    
+
     
