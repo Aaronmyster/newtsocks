@@ -54,3 +54,4 @@ docs/_build/
 
 # Ignore the data. Can't keep it in the repo
 *.db
+*.nopublic
