@@ -43,8 +43,8 @@ class OpinionAPI(BaseModel):
 	key = CharField()
 
 class OpinionAPIResponse(BaseModel):
-	api = ForeignKeyField(OpinionAPI, related_name='api_fromAPIResponse')
-	news = ForeignKeyField(News, related_name='news_fromAPIResponse')
+	api = ForeignKeyField(OpinionAPI, related_name='opinionAPIResponse.OpinionAPI')
+	news = ForeignKeyField(News, related_name='opinionAPIResponse.news')
 	date = DateTimeField()
 	response = CharField()
 	score = DoubleField()
