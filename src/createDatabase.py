@@ -3,6 +3,8 @@ from models import Company
 from models import NewsSource
 from models import News
 from models import Price
+from models import OpinionAPI
+from models import OpinionAPIResponse
 
 # 
 # Creates the database, and populates initial data
@@ -22,6 +24,8 @@ def createDB():
 	NewsSource.create_table()
 	News.create_table()
 	Price.create_table()
+	OpinionAPI.create_table()
+	OpinionAPIResponse.create_table()
 
 # Adds News Sources
 def addNewsSources():
