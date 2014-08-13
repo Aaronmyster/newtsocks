@@ -37,5 +37,16 @@ class Price(BaseModel):
     closePrice = DoubleField()
     volumePrice = DoubleField()
 
+class OpinionAPI(BaseModel):
+	name = CharField()
+	url = CharField()
+	key = CharField()
 
+class OpinionAPIResponse(BaseModel):
+	api = ForeignKeyField(OpinionAPI, related_name='api_fromAPIResponse')
+	news = ForeignKeyField(News, related_name='news_fromAPIResponse')
+	date = DateTimeField()
+	response = CharField()
+	score = DoubleField()
+    
     
