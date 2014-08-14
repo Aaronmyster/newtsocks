@@ -6,15 +6,15 @@ import unirest
 import sys
 import re
 
-#This is a script that will call out to a Mashape API to get the sentament of the 
-#articles. 
+# This is a script that will call out to a Mashape API to get the sentament of the 
+# articles. 
 
 def main():
 
-	#Only 1 API at a time for now
+	# Only 1 API at a time for now
 	api = OpinionAPI.select().where(OpinionAPI.name == "Text-Processing").get()
 
-	#All articles that don't have a score
+	# All articles that don't have a score
 	news = News.raw(
 		"""
 		Select * 
@@ -26,13 +26,13 @@ def main():
 		"""
 	)
 
-	#Go through each news article, and add Sentament
+	# Go through each news article, and add Sentament
 	for n in news:
 		addResponse(api,n)
 
 def addResponse(api,news):
 	try:
-		#Send the article text to the text processing API
+		# Send the article text to the text processing API
 		# These code snippets use an open-source library. http://unirest.io/python
 		response = unirest.post(api.url,
 		  headers={"X-Mashape-Key": api.key, "Content-Type": "application/x-www-form-urlencoded"},
@@ -49,7 +49,7 @@ def addResponse(api,news):
 		OpinionAPIResponse.create(api=api,news=news,date=d,response=response.body,score=score)
 
 		print "Added Response for {0}".format(news.url)
-	except Exception, e:
+	except:
 		print "Error adding Response for {0}".format(news.url)
 	
 	
