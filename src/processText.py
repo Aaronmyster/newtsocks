@@ -4,6 +4,7 @@ from models import OpinionAPI
 from models import OpinionAPIResponse
 import unirest
 import sys
+import re
 
 #This is a script that will call out to a Mashape API to get the sentament of the 
 #articles. 
@@ -13,8 +14,17 @@ def main():
 	#Only 1 API at a time for now
 	api = OpinionAPI.select().where(OpinionAPI.name == "Text-Processing").get()
 
-	#Get the list of articles
-	news = News.select()
+	#All articles that don't have a score
+	news = News.raw(
+		"""
+		Select * 
+		FROM news 
+		WHERE id not in (
+			SELECT news_id 
+			from OpinionAPIResponse
+		)
+		"""
+	)
 
 	#Go through each news article, and add Sentament
 	for n in news:
@@ -33,7 +43,7 @@ def addResponse(api,news):
 		d = datetime.now()	
 
 		#Need the score
-		score = getScore(response)
+		score = getScore(str(response.body))
 
 		#Add the response to the db
 		OpinionAPIResponse.create(api=api,news=news,date=d,response=response.body,score=score)
@@ -44,13 +54,10 @@ def addResponse(api,news):
 	
 	
 def getScore(responseText):
-	try:
 		neg = float(re.search("'neg': (([0-9]|\.)*)",responseText).group(1))
 		pos = float(re.search("'pos': (([0-9]|\.)*)",responseText).group(1))
 		score = pos - neg
 		return score
-	except Exception, e:
-		return 0
 
 
 if __name__ == '__main__':
