@@ -49,7 +49,8 @@ def addResponse(api,news):
 		OpinionAPIResponse.create(api=api,news=news,date=d,response=response.body,score=score)
 
 		print "Added Response for {0}".format(news.url)
-	except:
+	except Exception, e:
+		print e
 		print "Error adding Response for {0}".format(news.url)
 	
 	

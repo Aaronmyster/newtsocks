@@ -51,6 +51,7 @@ def readSearchPage(companyModel,newsSourceModel,url,page):
         readSearchPage(companyModel,newsSourceModel,baseURL+nextURL,page+1)
 
     except Exception, e:
+        print e
         print "There was an error on page {0}. Moving on.".format(page)
 
 def addNewsArticle(companyModel,newsSourceModel,url):
