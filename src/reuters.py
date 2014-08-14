@@ -9,7 +9,21 @@ import sys
 baseURL = 'http://www.reuters.com'
 
 def main():
-    companies = Company.select()
+
+    #Select companies that don't have any articles
+    companies = Company.raw(
+        """
+        Select * 
+        FROM company 
+        WHERE id not in (
+            SELECT company_id 
+            from news
+        )
+        """
+    )
+
+
+
     ns = NewsSource.select().where(NewsSource.name=='Reuters').get()
 
     for c in companies:
